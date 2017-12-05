@@ -1,2 +1,0 @@
-# SP
-jquery on Sharepoint
