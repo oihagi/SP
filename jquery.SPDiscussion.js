@@ -17,8 +17,9 @@
 		rest({"path":"/_api/contextinfo","type":"POST"}).done(function(data){
 			console.log(data);
 		});
-		rest({"path":"/_api/lists"}).done(function(data){
+		rest({"path":"/_api/lists","query":"?$filter=BaseTemplate eq 108 or BaseTemplate eq 171 or BaseTemplate eq 544"}).done(function(data){
 			console.log(data);
+			var lists_ = data.d.results;
 		});
 		if(!_spPageContextInfo.listId){
 			return;
