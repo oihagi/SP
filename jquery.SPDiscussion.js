@@ -1,3 +1,29 @@
+; (function (global, factory) {// 定義する関数を引数にとる
+	// CommonJS
+	if (typeof exports === "object") {
+		module.exports = factory();
+		// RequireJS
+	} else if (typeof define === "function" && define.amd) {
+		define(factory);
+	} else {
+		global.spreq = factory();
+	};
+})(this, function () {// 実際の定義を行う関数
+	'use strict';
+
+	var module_ = function module_() { };
+
+	module_.prototype = {
+
+	};
+
+	// モジュールのエクスポート
+	return module_;
+});
+
+var discussion_ = new spreq({ "webURL": "", "listName": "" });
+
+
 ;(function(){
 	RegisterSod("jquery.js", "//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js");
 	RegisterSod("jquery.SPServices.js","//cdnjs.cloudflare.com/ajax/libs/jquery.SPServices/2014.02/jquery.SPServices.min.js");
