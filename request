@@ -1,0 +1,98 @@
+; (function (global, factory) {// 定義する関数を引数にとる
+	// CommonJS
+	if (typeof exports === "object") {
+		module.exports = factory();
+		// RequireJS
+	} else if (typeof define === "function" && define.amd) {
+		define(factory);
+	} else {
+		global.spreq = factory();
+	};
+})(this, function () {// 実際の定義を行う関数
+	'use strict';
+
+	var module_ = function module_() { };
+
+	function list() {
+		this.__ajax().then(function (data) { }).catch(function (data) { });
+		return this;
+	};
+	function info() {
+		this.__ajax().then(function (data) { }).catch(function () { });
+		return this;
+	}
+	function item() {
+		this.__ajax().then(function (data) { }).catch(function (data) { });
+		return this;
+	};
+	function ajax(opt_ajax) {
+		return new Promise(function (resolve, reject) {
+			var xhr_;
+			if (window.XMLHttpRequest) {
+				xhr_ = new XMLHttpRequest();
+			} else if (window.ActiveXObject) {
+				try {
+					xhr_ = new ActiveXObject("MSXML2.XMLHTTP");
+				} catch (e) {
+					xhr_ = new ActiveXObject("Microsoft.XMLHTTP");
+				};
+			};
+			if (xhr_) {
+				xhr_.open(opt_ajax.type, opt_ajax.url, opt_ajax.async);
+				Object.keys(opt_ajax.headers || {}).forEach(function (key) {
+					xhr_.setRequestHeader(key, opt_ajax.headers[key]);
+				});
+				xhr_.onreadystatechange = function () {
+					switch (xhr.readyState) {
+						case 0:// 未初期化状態.
+							break;
+						case 1: // データ送信中.
+							break;
+						case 2: // 応答待ち.
+							break;
+						case 3: // データ受信中.
+							break;
+						case 4: // データ受信完了.
+							if (xhr_.status >= 200 && xhr_.status < 400) {
+								resolve(xhr_);
+							} else {
+								reject(xhr_);
+							};
+							xhr_.abort();
+							break;
+					};
+				};
+				xhr_.onerror = function () {
+					reject(xhr_);
+				};
+				xhr_.send(opt_ajax.data ? opt_ajax.data : null);
+			} else {
+				reject();
+			};
+		});
+	};
+	function parseText(opt_req) {
+		opt_req = opt_req || {};
+		var strErrText_ = "(" + opt_req.status + ") " + opt_req.responseText;
+		var strSpeCode_ = "";
+		try {
+			strSpeCode_ = JSON.parse(opt_req.responseText).error['code'].split(',')[0];
+			strErrText_ = "(" + opt_req.status + ") " + JSON.parse(opt_req.responseText).error['message'].value;
+		}
+		catch (ex) {
+			if (DEBUG) console.warn('Unable to parse request response:\n' + opt_req.responseText);
+		}
+		return strErrText_;
+	}
+	module_.prototype = {
+		"__parameter": {}
+		, "__ajax": ajax
+		, "__parseText": parseText
+		, "list": list
+		, "info": info
+		, "item": item
+	};
+
+	// モジュールのエクスポート
+	return module_;
+});
